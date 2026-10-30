@@ -7,8 +7,8 @@ A native macOS Pomodoro timer with an orbital dial, luminous gradients, and thre
 ## Three themes
 
 - **Stellar:** deep navy gradients, mint light, scattered stars, and a quiet orbital dial.
-- **Synthwave:** violet gradients, pink-to-peach accents, and a perspective grid.
-- **Cyberpunk:** dark teal gradients, acid-yellow-to-mint accents, circuitry, and scan lines.
+- **Synthwave:** a striped sunset, pink-to-peach gradients, bold italic clock, equalizer-style progress, and a perspective grid.
+- **Cyberpunk:** an angular instrument panel, segmented progress bars, terminal typography, acid-yellow-to-mint gradients, circuitry, and scan lines.
 
 Switch from the lower-left theme menu or Settings. Theme selection is remembered.
 

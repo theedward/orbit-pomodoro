@@ -14,6 +14,7 @@ enum OrbitTheme: String, CaseIterable, Identifiable {
         case .cyberpunk: [Self.hex(0x183B3B), Self.hex(0x112125), Self.hex(0x0B1118)]
     } }
     var caption: String { switch self { case .stellar: "A little space to focus."; case .synthwave: "Find your frequency."; case .cyberpunk: "Disconnect. Lock in." } }
+    var symbol: String { self == .stellar ? "circle.dotted.circle" : self == .synthwave ? "sun.horizon.fill" : "cpu" }
     var label: String { switch self { case .stellar: "DEEP SPACE"; case .synthwave: "AFTER HOURS"; case .cyberpunk: "NEURAL LINK" } }
 }
 
@@ -53,7 +54,7 @@ enum OrbitTheme: String, CaseIterable, Identifiable {
             save(); return true
         }; return false
     }
-    func tick() { _ = finishTick() }
+    func tick() { if engine.isRunning { _ = finishTick() } }
     func toggle() { completion = nil; if engine.isRunning { engine.pause() } else { engine.start() }; save() }
     func reset() { engine.reset(); completion = nil; save() }
     func select(_ mode: SessionMode) { engine.select(mode); completion = nil; save() }
@@ -170,7 +171,7 @@ struct ContentView: View {
             Atmosphere(theme: theme)
             VStack(spacing: 0) {
                 HStack {
-                    Image(systemName: "circle.dotted.circle").font(.system(size: 24, weight: .ultraLight)).rotationEffect(.degrees(-25)).foregroundStyle(theme.accent)
+                    Image(systemName: theme.symbol).font(.system(size: 24, weight: .ultraLight)).rotationEffect(.degrees(-25)).foregroundStyle(theme.accent)
                     Text("O R B I T").font(.system(size: 13, weight: .medium))
                     Spacer()
                     HStack(spacing: 5) { Circle().fill(theme.accent).frame(width: 4, height: 4); Text(theme.label).font(.system(size: 8, design: .monospaced)).tracking(1.4) }.foregroundStyle(theme.accent.opacity(0.7))
@@ -179,17 +180,23 @@ struct ContentView: View {
                     ForEach(SessionMode.allCases, id: \.self) { mode in
                         Button { model.select(mode) } label: {
                             Text(mode.title).font(.system(size: 11, weight: model.engine.mode == mode ? .semibold : .regular)).frame(maxWidth: .infinity).padding(.vertical, 10)
-                                .background { if model.engine.mode == mode { Capsule().fill(LinearGradient(colors: [theme.accent.opacity(0.23), theme.secondary.opacity(0.14)], startPoint: .topLeading, endPoint: .bottomTrailing)).overlay(Capsule().stroke(theme.accent.opacity(0.25), lineWidth: 0.7)) } }
+                                .background { if model.engine.mode == mode { ThemePanel(theme: theme).fill(LinearGradient(colors: [theme.accent.opacity(0.23), theme.secondary.opacity(0.14)], startPoint: .topLeading, endPoint: .bottomTrailing)).overlay(ThemePanel(theme: theme).stroke(theme.accent.opacity(0.25), lineWidth: 0.7)) } }
                         }.buttonStyle(.plain).foregroundStyle(model.engine.mode == mode ? .white : .white.opacity(0.48))
                     }
-                }.padding(4).background(.black.opacity(0.17), in: Capsule()).overlay(Capsule().stroke(.white.opacity(0.08), lineWidth: 1)).padding(.top, 30)
-                OrbitDial(model: model).padding(.top, 15)
+                }.padding(4).background(.black.opacity(0.17), in: ThemePanel(theme: theme)).overlay(ThemePanel(theme: theme).stroke(.white.opacity(0.08), lineWidth: 1)).padding(.top, 30)
+                Group {
+                    switch theme {
+                    case .stellar: OrbitDial(model: model)
+                    case .synthwave: SynthwaveDial(model: model)
+                    case .cyberpunk: CyberpunkDial(model: model)
+                    }
+                }.padding(.top, 15)
                 Text(theme.caption).font(.system(size: 12)).foregroundStyle(.white.opacity(0.42)).padding(.top, 0)
                 HStack(spacing: 12) {
                     Button { model.toggle() } label: {
                         HStack(spacing: 12) { Image(systemName: model.engine.isRunning ? "pause.fill" : "play.fill").font(.system(size: 12)); Text(model.engine.isRunning ? "Pause session" : model.engine.remaining < model.engine.duration ? "Resume session" : "Start session").font(.system(size: 14, weight: .medium)).tracking(1) }
                             .foregroundStyle(theme.background.last!).frame(width: 258, height: 52)
-                            .background(LinearGradient(colors: [theme.accent, theme.secondary], startPoint: .topLeading, endPoint: .bottomTrailing), in: Capsule()).overlay(Capsule().stroke(.white.opacity(0.3), lineWidth: 1)).shadow(color: theme.accent.opacity(0.12), radius: 18, y: 6)
+                            .background(LinearGradient(colors: [theme.accent, theme.secondary], startPoint: .topLeading, endPoint: .bottomTrailing), in: ThemePanel(theme: theme)).overlay(ThemePanel(theme: theme).stroke(.white.opacity(0.3), lineWidth: 1)).shadow(color: theme.accent.opacity(0.12), radius: 18, y: 6)
                     }.buttonStyle(OrbitButtonStyle(accent: theme.accent)).keyboardShortcut(.space, modifiers: []).help("Start or pause · Space")
                     Button { model.reset() } label: { Image(systemName: "arrow.counterclockwise").font(.system(size: 16, weight: .light)).frame(width: 50, height: 50).background(.white.opacity(0.035), in: Circle()).overlay(Circle().stroke(.white.opacity(0.12), lineWidth: 1)) }.buttonStyle(.plain).help("Reset timer · ⌘R").keyboardShortcut("r", modifiers: .command)
                 }.padding(.top, 25)
@@ -223,7 +230,7 @@ struct SettingsView: View {
             Text("APPEARANCE").font(.system(size: 9, design: .monospaced)).tracking(2).foregroundStyle(.secondary)
             HStack(spacing: 10) { ForEach(OrbitTheme.allCases) { option in
                 Button { model.theme = option } label: {
-                    VStack(spacing: 8) { Circle().stroke(LinearGradient(colors: [option.accent, option.secondary], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 3).frame(width: 27, height: 27); Text(option.rawValue).font(.system(size: 11)) }.frame(maxWidth: .infinity).padding(.vertical, 14).background(LinearGradient(colors: option.background, startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 12)).overlay(RoundedRectangle(cornerRadius: 12).stroke(model.theme == option ? option.accent : .white.opacity(0.1), lineWidth: 1))
+                    VStack(spacing: 8) { Image(systemName: option.symbol).font(.system(size: 25, weight: .light)).foregroundStyle(LinearGradient(colors: [option.accent, option.secondary], startPoint: .topLeading, endPoint: .bottomTrailing)).frame(width: 30, height: 30); Text(option.rawValue).font(.system(size: 11)) }.frame(maxWidth: .infinity).padding(.vertical, 14).background(LinearGradient(colors: option.background, startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 12)).overlay(RoundedRectangle(cornerRadius: 12).stroke(model.theme == option ? option.accent : .white.opacity(0.1), lineWidth: 1))
                 }.buttonStyle(.plain)
             } }
             Text("SESSION LENGTHS").font(.system(size: 9, design: .monospaced)).tracking(2).foregroundStyle(.secondary)
