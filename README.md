@@ -1,65 +1,115 @@
 # Orbit
 
-A native macOS Pomodoro timer with an orbital dial, luminous gradients, and three distinct moods. Built with Codex as a small showcase of taking a visual concept to a working Mac app.
+A native macOS Pomodoro timer with living gradient themes and a compact floating mode. Built with Swift, SwiftUI, and AppKit. No accounts, analytics, or network access.
 
-<img src="Assets/Orbit.png" width="144" alt="Orbit app icon">
+<img src="Assets/Orbit.png" width="128" alt="Orbit app icon">
 
-## Three themes
+**[Download the latest release](https://github.com/theedward/orbit-pomodoro/releases/latest)** · [MIT license](LICENSE)
 
-- **Stellar:** deep navy gradients, mint light, scattered stars, and a quiet orbital dial.
-- **Synthwave:** a striped sunset, pink-to-peach gradients, bold italic clock, equalizer-style progress, and a perspective grid.
-- **Cyberpunk:** an angular instrument panel, segmented progress bars, terminal typography, acid-yellow-to-mint gradients, circuitry, and scan lines.
+## Requirements
 
-Switch from the lower-left theme menu or Settings. Theme selection is remembered.
+- macOS 14 Sonoma or later.
+- Apple Silicon or Intel Mac. The same universal download supports both.
+- No Xcode, terminal commands, or additional software needed to install the app.
 
-## Download
+## Install
 
-Get the universal DMG from [Releases](https://github.com/theedward/orbit-pomodoro/releases/latest), open it, and drag Orbit into Applications. Requires macOS 14 or later; supports Apple Silicon and Intel.
+1. Open the [latest release](https://github.com/theedward/orbit-pomodoro/releases/latest).
+2. Under **Assets**, download **`Orbit-1.2.1-universal.dmg`**. GitHub's “Source code” archives are for developers; they do not contain a ready-to-run app.
+3. Double-click the DMG in Downloads.
+4. In the Orbit installer window, **drag Orbit onto Applications**.
+5. Open **Applications → Orbit**. You can now eject the Orbit disk image and delete the downloaded DMG.
 
-This independent showcase build is ad-hoc signed and **not Apple notarized**. macOS may require approval in System Settings → Privacy & Security on first launch. Alternatively, review the source and build it locally.
+![Orbit drag-to-install window](Assets/Installer/installer-preview.png)
 
-## Features
+### First launch and macOS security
 
-- Focus, short break, and long break; defaults of 25 / 5 / 15 minutes.
-- Editable lengths from 1–180 minutes, persisted locally.
-- Start, pause, resume, reset, and completed-session tracking.
-- Long break after every fourth focus session; each session starts explicitly.
-- Clock-based countdown handles sleep and delayed timer updates.
-- Timer state restores on relaunch, including an active deadline.
-- Completion sound and in-app completion message.
-- Menu bar controls and active countdown.
-- **Living themes:** drifting Stellar stars and satellite, a setting Synthwave sun with animated equalizer, and a scanning Cyberpunk panel that powers down as the session progresses.
-- **Break atmospheres:** lavender space, cool dawn, and subdued recovery palettes.
-- **Mini mode:** a floating compact timer with start/pause, reset, session/theme menu, and expand control. Its window position is remembered, and it shares the full timer state.
-- Motion pauses with the timer, stops in the hidden full window during mini mode, respects macOS Reduce Motion, and can be disabled in Settings.
-- Keep-on-top option and a ten-second demonstration mode in Settings.
-- Space to start/pause, ⌘R to reset, ⌘, for Settings, ⇧⌘M to toggle mini mode.
+This independent build is **ad-hoc signed, but not signed with an Apple Developer ID or notarized by Apple**. macOS may block the downloaded app on first launch.
 
-All processing stays on your Mac. No accounts, analytics, or network access. Session count persists until app preferences are cleared.
+If that happens, confirm that you downloaded it from this repository's Releases page, then open **System Settings → Privacy & Security**, find the message about Orbit, choose **Open Anyway**, and confirm **Open** when prompted. The option appears after a blocked launch attempt. If your Mac is managed by an organization, its policies may prevent this approval.
 
-## Build and test
+You can also inspect the source and [build locally](#build-from-source).
 
-Install Xcode or its Command Line Tools, then:
+### ZIP alternative
+
+Download `Orbit-1.2.1-universal.zip` from the same release, double-click it to extract **Orbit.app**, then drag the app into Applications. The same first-launch guidance applies.
+
+### Upgrade
+
+1. Quit Orbit using its menu bar menu → **Quit Orbit**, or ⌘Q. Closing its window alone does not quit the app.
+2. Download the new DMG and drag Orbit into Applications.
+3. Choose **Replace** when Finder asks, then reopen Orbit from Applications.
+
+Your saved theme, session lengths, completed-session count, and timer state remain in macOS preferences. An active timer retains its original deadline.
+
+### Verify the download (optional)
+
+Each release includes `SHA256SUMS.txt`. In Terminal, run `shasum -a 256` followed by a space and drag the downloaded DMG into the Terminal window. Press Return and compare the result with the matching filename in `SHA256SUMS.txt`.
+
+## Use Orbit
+
+Choose **Focus**, **Short break**, or **Long break**, then press **Start session**. Defaults are 25 / 5 / 15 minutes; edit them in Settings. After four completed focus sessions, Orbit prepares a long break. Each session waits for you to start it.
+
+- **Themes:** use the lower-left theme menu or Settings.
+- **Mini mode:** click the compact-mode button in the header or press ⇧⌘M. The floating timer shares your current session, stays above other windows, and remembers its position. Expand it or close it to restore the full window.
+- **Menu bar:** open the timer, switch to mini mode, start/pause, reset, or quit. The remaining time appears while running.
+- **Settings:** adjust session lengths, completion sound, keep-on-top, and living effects. A ten-second demo shows the completion flow.
+- **Completion:** a sound and an in-app message indicate the end of a session. Orbit prepares the next mode without starting it automatically.
+
+| Shortcut | Action |
+| --- | --- |
+| Space | Start / pause |
+| ⌘R | Reset the current timer |
+| ⇧⌘M | Switch between full and mini mode |
+| ⌘, | Open Settings from the full window |
+| ⌘Q | Quit Orbit |
+
+## Living themes
+
+- **Stellar:** mint light, an orbital dial, drifting stars, and a moving satellite. Breaks turn the scene lavender.
+- **Synthwave:** a striped sunset sinks as the session progresses, with animated equalizer bars and a moving horizon grid. Breaks become a cool dawn in Slow Club.
+- **Cyberpunk:** an angular instrument panel, moving scan band, and pulsing segments that power down with session progress. Breaks enter a subdued Recovery Mode.
+
+All themes use gradient backgrounds and controls. Continuous motion pauses with the timer, stops in the hidden full window during mini mode, respects macOS Reduce Motion, and can be disabled in Settings.
+
+## Local data
+
+Orbit stores its theme, session lengths, sound/effects preferences, completed-session count, and timer state in UserDefaults on your Mac. The countdown uses elapsed time, including time spent asleep or with the app closed. The app makes no network calls and has no external runtime dependencies.
+
+## Build from source
+
+Install Xcode or Apple's Command Line Tools, then:
 
 ```sh
+git clone https://github.com/theedward/orbit-pomodoro.git
+cd orbit-pomodoro
 zsh test.sh
 zsh build.sh
 open Orbit.app
 ```
 
-The build script creates a universal macOS app with an embedded icon and an ad-hoc signature, using Apple's Swift compiler. No package manager or external dependencies are needed.
+`build.sh` compiles both Apple Silicon and Intel binaries, combines them into a universal app, embeds the icon and license, and applies an ad-hoc signature. No Swift packages are needed.
 
-Create the disk image, ZIP, and checksums:
+### Build the installer
 
 ```sh
 zsh package.sh
 ```
 
-Outputs appear under `dist/`. For notarized distribution, sign using your own Developer ID and notarize through Apple before sharing.
+Outputs appear in `dist/`: the branded DMG, universal app ZIP, and SHA-256 checksums. On first run, packaging creates an isolated Python environment and installs the pinned tools in `Packaging/requirements.txt`. These tools are not bundled in the app.
 
-## Stack
+The installer uses a Retina background, fixed icon positions, an Applications shortcut, and a custom volume icon. The script mounts the finished DMG read-only and verifies its app signature, architectures, icon, license, background metadata, and icon positions.
 
-Swift, SwiftUI, AppKit, Combine, Foundation, and UserDefaults. SwiftUI Canvas draws the theme artwork directly. `TimerEngine.swift` contains the timer state machine; `Tests/main.swift` exercises pause/resume, completion, break cycles, reset, custom durations, and wake-after-deadline behavior. `Sources/MakeIcon.swift` is a standalone AppKit icon generator and is excluded from application compilation.
+For Apple-notarized distribution, sign with your own Developer ID and notarize through Apple before sharing.
+
+## Project layout
+
+- `Sources/TimerEngine.swift`: timer state machine.
+- `Sources/Orbit.swift`: application state, main window, Settings, and menu bar.
+- `Sources/ThemeDials.swift`: distinct theme layouts and progress effects.
+- `Sources/LivingThemes.swift`: break palettes and floating mini timer.
+- `Tests/main.swift`: elapsed time, pause/resume, completion, break cycles, reset, custom durations, and wake-after-deadline checks.
+- `Packaging/`: installer artwork generator, Finder layout, pinned build tools, and mounted-image verification.
 
 ## License
 

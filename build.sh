@@ -7,6 +7,8 @@ for arch in arm64 x86_64; do
 done
 lipo -create build/Orbit-arm64 build/Orbit-x86_64 -output Orbit.app/Contents/MacOS/Orbit
 cp Assets/Orbit.icns Orbit.app/Contents/Resources/Orbit.icns
+cp LICENSE Orbit.app/Contents/Resources/LICENSE.txt
+cp INSTALL.txt Orbit.app/Contents/Resources/INSTALL.txt
 cat > Orbit.app/Contents/Info.plist <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -16,8 +18,8 @@ cat > Orbit.app/Contents/Info.plist <<'PLIST'
 <key>CFBundleName</key><string>Orbit</string>
 <key>CFBundleDisplayName</key><string>Orbit</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>1.2</string>
-<key>CFBundleVersion</key><string>3</string>
+<key>CFBundleShortVersionString</key><string>1.2.1</string>
+<key>CFBundleVersion</key><string>4</string>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSHighResolutionCapable</key><true/>
 <key>CFBundleIconFile</key><string>Orbit</string>

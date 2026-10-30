@@ -1,0 +1,22 @@
+"""Branded Finder presentation, written directly without Finder scripting."""
+format = 'UDZO'
+filesystem = 'HFS+'
+files = [defines['app']]
+symlinks = {'Applications': '/Applications'}
+icon = defines['icon']
+background = defines['background']
+window_rect = ((180, 160), (720, 512))
+default_view = 'icon-view'
+show_toolbar = False
+show_status_bar = False
+show_tab_view = False
+show_pathbar = False
+show_sidebar = False
+show_icon_preview = False
+include_icon_view_settings = True
+include_list_view_settings = False
+arrange_by = None
+icon_size = 104
+text_size = 13
+label_pos = 'bottom'
+icon_locations = {'Orbit.app': (210, 278), 'Applications': (510, 278)}
