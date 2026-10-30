@@ -2,11 +2,18 @@
 set -eu
 cd "$(dirname "$0")"
 zsh build.sh
-mkdir -p build/installer dist
-ditto Orbit.app build/installer/Orbit.app
-if [[ ! -L build/installer/Applications ]]; then ln -s /Applications build/installer/Applications; fi
-cp INSTALL.txt build/installer/INSTALL.txt
-cp LICENSE build/installer/LICENSE.txt
-hdiutil create -volname "Orbit" -srcfolder build/installer -ov -format UDZO dist/Orbit-1.0.0-universal.dmg
-ditto -c -k --keepParent Orbit.app dist/Orbit-1.0.0-universal.zip
+mkdir -p dist
+# Stage outside synced Documents folders, which can add Finder metadata that
+# invalidates strict signature verification. Never include extended attributes.
+stage=$(mktemp -d "${TMPDIR:-/tmp}/orbit-installer.XXXXXX")
+trap 'rm -rf "$stage"' EXIT
+ditto --norsrc --noextattr Orbit.app "$stage/Orbit.app"
+xattr -cr "$stage/Orbit.app"
+codesign --force --deep --sign - "$stage/Orbit.app"
+codesign --verify --deep --strict "$stage/Orbit.app"
+ln -s /Applications "$stage/Applications"
+cp INSTALL.txt "$stage/INSTALL.txt"
+cp LICENSE "$stage/LICENSE.txt"
+hdiutil create -volname "Orbit" -srcfolder "$stage" -ov -format UDZO dist/Orbit-1.0.0-universal.dmg
+ditto --norsrc --noextattr -c -k --keepParent "$stage/Orbit.app" dist/Orbit-1.0.0-universal.zip
 shasum -a 256 dist/Orbit-1.0.0-universal.dmg dist/Orbit-1.0.0-universal.zip > dist/SHA256SUMS.txt
