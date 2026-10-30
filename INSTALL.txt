@@ -13,6 +13,12 @@ left corner. Each theme has gradient backgrounds, a gradient timer dial,
 and a gradient start button.
 
 Space starts or pauses. Command-R resets. Command-comma opens Settings.
+Shift-Command-M switches between the full timer and floating mini mode.
+The mini timer shares the same session, stays above other windows, and
+remembers its position. Its session menu also lets you choose a theme.
+
+Living themes animate while running and shift palettes during breaks.
+Effects respect macOS Reduce Motion and can be disabled in Settings.
 Settings includes editable session lengths, sound, keep-on-top, and a
 10-second demo to show the full session-completion flow.
 

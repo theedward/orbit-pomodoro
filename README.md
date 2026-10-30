@@ -28,8 +28,12 @@ This independent showcase build is ad-hoc signed and **not Apple notarized**. ma
 - Timer state restores on relaunch, including an active deadline.
 - Completion sound and in-app completion message.
 - Menu bar controls and active countdown.
+- **Living themes:** drifting Stellar stars and satellite, a setting Synthwave sun with animated equalizer, and a scanning Cyberpunk panel that powers down as the session progresses.
+- **Break atmospheres:** lavender space, cool dawn, and subdued recovery palettes.
+- **Mini mode:** a floating compact timer with start/pause, reset, session/theme menu, and expand control. Its window position is remembered, and it shares the full timer state.
+- Motion pauses with the timer, stops in the hidden full window during mini mode, respects macOS Reduce Motion, and can be disabled in Settings.
 - Keep-on-top option and a ten-second demonstration mode in Settings.
-- Space to start/pause, ⌘R to reset, ⌘, for Settings.
+- Space to start/pause, ⌘R to reset, ⌘, for Settings, ⇧⌘M to toggle mini mode.
 
 All processing stays on your Mac. No accounts, analytics, or network access. Session count persists until app preferences are cleared.
 
